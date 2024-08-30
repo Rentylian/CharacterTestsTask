@@ -1,6 +1,5 @@
 ﻿using Code.Common;
 using Code.Mono;
-using UnityEngine;
 
 namespace Code.Base
 {
@@ -18,6 +17,7 @@ namespace Code.Base
         public override void Initialize()
         {
             _character.Events.InteractHandler += Interact;    
+            _character.CharacterView.InteractionDiscontinued += LockInteraction;
         }
 
         public override bool CheckInteractive(InteractableView interactableView)
@@ -31,7 +31,7 @@ namespace Code.Base
             _isInteractReady = false; 
             return false;
         }
-
+        
         public override void Interact()
         {
             if (_isInteractReady)
@@ -39,6 +39,11 @@ namespace Code.Base
                 CharacterParameters _characterParameters = _character.CharacterModules.Find(x => x is CharacterParameters) as CharacterParameters;
                 _characterParameters?.ChangeHealth(_currentInteractable.InteractableValue);
             }
+        }
+
+        private void LockInteraction()
+        {
+            _isInteractReady = false;
         }
     }
 }
